@@ -1,51 +1,76 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
+﻿using System.Globalization;
 
 namespace KontoBankowe
 {
     internal class Automat
     {
         private KontoBankowe konto;
-        private Dictionary<decimal, int> monety = new Dictionary<decimal, int>
-        {
-            { 0.01m, 0 }, { 0.02m, 0 }, { 0.05m, 0 },
-            { 0.1m, 0 }, { 0.2m, 0 }, { 0.5m, 0 },
-            { 1m, 0 }, { 2m, 0 }, { 5m, 0 }
-        };
+        private decimal[] nominaly = { 5m, 2m, 1m, 0.5m, 0.2m, 0.1m };
+        private int[] ilosci;
+        private int pojemnosc;
 
-        public Automat(KontoBankowe konto)
+        public Automat(KontoBankowe konto, int pojemnosc)
         {
             this.konto = konto;
+            this.pojemnosc = pojemnosc;
+            ilosci = new int[nominaly.Length];
         }
 
-        public void WrzucMonete(string tekst)
+        public void WrzucMonety(string tekst)
         {
-            if (!decimal.TryParse(tekst, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal wartosc))
+            string[] czesci = tekst.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            int przyjete = 0;
+            int zwrocone = 0;
+
+            foreach (string czesc in czesci)
+            {
+                if (WrzucMonete(czesc))
+                {
+                    przyjete++;
+                }
+                else
+                {
+                    zwrocone++;
+                }
+            }
+
+            Console.WriteLine("Przyjęte: " + przyjete + ", zwrócone: " + zwrocone);
+        }
+
+        public bool WrzucMonete(string tekst)
+        {
+            if (!decimal.TryParse(tekst, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal wartosc))
             {
                 Console.WriteLine("Nieudany odczyt: " + tekst);
-                return;
+                return false;
             }
 
-            if (!monety.ContainsKey(wartosc))
+            int indeks = Array.IndexOf(nominaly, wartosc);
+            if (indeks == -1)
             {
                 Console.WriteLine("Zła moneta: " + wartosc);
-                return;
+                return false;
             }
 
-            monety[wartosc]++;
+            if (ilosci[indeks] == pojemnosc)
+            {
+                Console.WriteLine("Brak miejsca, zwrot monety: " + wartosc);
+                return false;
+            }
+
+            ilosci[indeks]++;
             konto.Wplac(wartosc);
             Console.WriteLine("Moneta przyjęta: " + wartosc);
+            return true;
         }
 
         public void PokazMonety()
         {
             decimal suma = 0;
-            foreach (var moneta in monety)
+            for (int i = 0; i < nominaly.Length; i++)
             {
-                Console.WriteLine(moneta.Key + ": " + moneta.Value);
-                suma += moneta.Key * moneta.Value;
+                Console.WriteLine(nominaly[i] + ": " + ilosci[i]);
+                suma += nominaly[i] * ilosci[i];
             }
             Console.WriteLine("Razem: " + suma);
         }

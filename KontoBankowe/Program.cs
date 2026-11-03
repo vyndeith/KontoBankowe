@@ -1,19 +1,14 @@
-﻿using System.Globalization;
-
-namespace KontoBankowe
+﻿namespace KontoBankowe
 {
     internal class Program
     {
         static void Main(string[] args)
         {
             KontoBankowe konto = new KontoBankowe();
-            Automat automat = new Automat(konto);
+            Automat automat = new Automat(konto, 2);
 
-            automat.WrzucMonete("0.5");
-            automat.WrzucMonete("1");
-            automat.WrzucMonete("2");
-            automat.WrzucMonete("3");
-            automat.WrzucMonete("abc");
+            automat.WrzucMonety("5 2 abc 0.5 3 1");
+            automat.WrzucMonety("5 5 5");
 
             Console.WriteLine("Stan konta: " + konto.StanKonta());
             Console.WriteLine("Numer konta: " + konto.Numer);
