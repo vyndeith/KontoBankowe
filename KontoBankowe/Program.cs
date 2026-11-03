@@ -1,5 +1,4 @@
-﻿
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace KontoBankowe
 {
@@ -18,6 +17,7 @@ namespace KontoBankowe
 
             Console.WriteLine("Stan konta: " + konto.StanKonta());
             Console.WriteLine("Numer konta: " + konto.Numer);
+            konto.PokazHistorie();
             automat.PokazMonety();
 
             KontoBankowe drugieKonto = new KontoBankowe();
