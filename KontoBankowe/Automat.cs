@@ -5,7 +5,7 @@ namespace KontoBankowe
     internal class Automat
     {
         private KontoBankowe konto;
-        private decimal[] nominaly = { 5m, 2m, 1m, 0.5m, 0.2m, 0.1m };
+        public static decimal[] nominaly = { 5m, 2m, 1m, 0.5m, 0.2m, 0.1m };
         private int[] ilosci;
         private int pojemnosc;
 

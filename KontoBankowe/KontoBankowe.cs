@@ -23,6 +23,18 @@ namespace KontoBankowe
             historia.Add(kwota);
         }
 
+        public bool Wyplac(decimal kwota)
+        {
+            if (kwota <= 0 || kwota > stan)
+            {
+                Console.WriteLine("Wypłata nieudana");
+                return false;
+            }
+
+            stan -= kwota;
+            return true;
+        }
+
         public string NumerKonta()
         {
             return RandomNumberGenerator.GetString("0123456789", 25);
